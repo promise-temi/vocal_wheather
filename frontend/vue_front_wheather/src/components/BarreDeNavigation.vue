@@ -17,5 +17,7 @@ h1{
 
 header{
     background-color: black;
+    padding : 8px 20px;
+    
 }
 </style>
