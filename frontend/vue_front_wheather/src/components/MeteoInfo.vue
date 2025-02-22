@@ -9,14 +9,18 @@
             </h2>
             <h3>{{ date }}</h3>
             <div class="infos">
-                <RequestedMeteo/>
+                <div class="m-partie1">
+                    <RequestedMeteo/>
+                    <DailyMeteo/>
+                </div>
             </div>
         </div>
         
     </section>
 </template>
 <script>
-import RequestedMeteo from './RequestedMeteo.vue'
+import RequestedMeteo from './meteo-info-componants/RequestedMeteo.vue';
+import DailyMeteo from './meteo-info-componants/DailyMeteo.vue';
 
 
 export default{
@@ -27,7 +31,8 @@ export default{
         }
     },
     components:{
-        RequestedMeteo
+        RequestedMeteo,
+        DailyMeteo
     }
 }
 </script>
@@ -35,7 +40,7 @@ export default{
 <style scoped>
 section.section-meteo-info{
     width: 850px;
-    height: 565px;
+    height: 755px;
     background-color: #171717a3;
     margin: 50px;
     padding: 20px;
@@ -56,6 +61,11 @@ h3{
     position: relative;
     right: -30px;
     color: rgb(182, 182, 182);
+}
+
+div.m-partie1{
+    display: flex;
+    flex-direction: column;
 }
 </style>
 

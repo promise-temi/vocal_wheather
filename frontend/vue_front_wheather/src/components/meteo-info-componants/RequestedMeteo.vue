@@ -24,7 +24,7 @@ export default{
         return{
             temperature: '19',
             weatherCode: 'Mid Rain',
-            meteoIcon: new URL('../assets/images/Cloud_example.png', import.meta.url).href,
+            meteoIcon: new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
             humidityCode: "Humidité assez élevée",
             humidity: 75,
 
@@ -77,10 +77,13 @@ div.humidity{
 }
 
 div.humidity p{
-    font-size: 13px;
+    font-size: 15px;
     margin-bottom: 10px;
 }
 
+div.progress{
+    border-radius: 15px;
+}
 div.humidity div.progress-bar{
     background-image: linear-gradient(to right, #A5EDFF, #05CCFF);
 }
