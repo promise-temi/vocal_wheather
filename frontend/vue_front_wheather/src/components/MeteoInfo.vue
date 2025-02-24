@@ -13,6 +13,9 @@
                     <RequestedMeteo/>
                     <DailyMeteo/>
                 </div>
+                <div class="m-partie2">
+                    <HourlyMeteo/>
+                </div>
             </div>
         </div>
         
@@ -21,6 +24,7 @@
 <script>
 import RequestedMeteo from './meteo-info-componants/RequestedMeteo.vue';
 import DailyMeteo from './meteo-info-componants/DailyMeteo.vue';
+import HourlyMeteo from './meteo-info-componants/HourlyMeteo.vue';
 
 
 export default{
@@ -32,7 +36,8 @@ export default{
     },
     components:{
         RequestedMeteo,
-        DailyMeteo
+        DailyMeteo,
+        HourlyMeteo
     }
 }
 </script>
@@ -44,6 +49,7 @@ section.section-meteo-info{
     background-color: #171717a3;
     margin: 50px;
     padding: 20px;
+    margin-top: 20px;
 }
 
 h2{
@@ -66,6 +72,10 @@ h3{
 div.m-partie1{
     display: flex;
     flex-direction: column;
+}
+
+div.infos{
+    display: flex;
 }
 </style>
 

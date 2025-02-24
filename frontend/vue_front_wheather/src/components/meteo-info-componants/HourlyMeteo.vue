@@ -1,14 +1,14 @@
 <template>
-    <section class="daily-meteo">
-        <p class="title">Prévisions sur 5 jours</p>
-        <div class="previsions">
-            <div class="prevision" v-for="(prevision, index) in previsions" :key="index">
-                <p class="jour">{{ prevision.date }}.</p>
+<section class="daily-meteo">
+    <p class="title"></p>
+    <div class="previsions">
+        <div class="prevision" v-for="(prevision, index) in previsions" :key="index">
+                <p class="jour">{{ prevision.date }}</p>
                 <img v-bind:src="prevision.logo" alt="">
                 <p class="temperatures">{{ prevision.temperatures }}</p>
-            </div>
         </div>
-    </section>
+    </div>
+</section>
 </template>
 <script>
 export default{
@@ -16,35 +16,42 @@ export default{
         return{
             previsions : [
                 {
-                    date : 'Auj',
+                    date : 'Maint.',
                     logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '13° - 12°'
+                    temperatures : '13°'
 
                 },
                 {
-                    date : 'Lun',
+                    date : '7h',
                     logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '11° - 13°'
+                    temperatures : '11°'
 
                 },
                 {
-                    date : 'Mar',
+                    date : '8h',
                     logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '5° - 17°'
+                    temperatures : '5°'
 
                 },
                 {
-                    date : 'Mer',
+                    date : '9h',
                     logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '3° - 12°'
+                    temperatures : '3°'
 
                 },
                 {
-                    date : 'Jeu',
+                    date : '10h',
                     logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '13° - 14°'
+                    temperatures : '13°'
 
                 },
+                {
+                    date : '11h',
+                    logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
+                    temperatures : '13°'
+
+                },
+
             ]
         }
     }
@@ -53,39 +60,52 @@ export default{
 <style scoped>
 section.daily-meteo{
     margin: 25px;
+    margin-left: 0;
     margin-top: 0;
     background-image: linear-gradient(to bottom,#c9e5ffb9,#a5edffb5);
-    width: 250px;
+    width: 480px;
+    height: 175px;
     padding: 25px;
     padding-bottom: 15px;
     border-radius: 10px;
     font-size: 15px;
+    
 }
 
 section.daily-meteo p.title {
     margin-bottom: 0px;
 }
 
-
+div.previsions{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    position: relative;
+    right: -10px;
+}
 div.prevision{
     display: flex;
-    justify-content: space-between;
-    margin-bottom: 0px;
-    border-color: rgba(255, 255, 255, 0.518);
-    border-width: 1px;
-    border-bottom-style: solid;
-    padding-top: 12px;
+    flex-direction: column;
+    
 }
 
 div.prevision p.jour{
     font-weight: 700;
 }
 
+
 div.prevision img{
     width: 50px;
+    position: relative;
+    left: -15px;
 }
 
-div.previsions div.prevision:last-child{
-    border-bottom-style: none;
+div.prevision p.temperatures{
+    text-align: center;
+    position: relative;
+    left: -13px;
+    margin-bottom: 0;
 }
+
+
 </style>

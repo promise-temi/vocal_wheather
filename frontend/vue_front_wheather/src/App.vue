@@ -1,6 +1,7 @@
 <template>
 
       <Header/>
+      <Microphone/>
       <MeteoInfo/>
 
   
@@ -9,11 +10,13 @@
 <script>
 import Header from './components/BarreDeNavigation.vue'
 import MeteoInfo from './components/MeteoInfo.vue'
+import Microphone from './components/Microphone.vue'
 
 export default{
   components: {
     Header,
-    MeteoInfo
+    MeteoInfo,
+    Microphone,
 }
 }
 </script>

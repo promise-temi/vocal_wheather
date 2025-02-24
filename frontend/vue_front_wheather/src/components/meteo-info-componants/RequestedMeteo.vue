@@ -46,7 +46,7 @@ export default{
 
 <style scoped>
 section.requested-meteo{
-    border: solid 1px rgba(0, 0, 0, 0.148);
+    /* border: solid 1px rgba(0, 0, 0, 0.148); */
     margin: 25px;
     width: 250px;
 }
