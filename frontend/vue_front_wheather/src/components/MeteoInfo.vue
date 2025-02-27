@@ -10,36 +10,42 @@
             <h3>{{ date }}</h3>
             <div class="infos">
                 <div class="m-partie1">
-                    <RequestedMeteo/>
-                    <DailyMeteo/>
+                    <RequestedMeteo :currentMeteo="currentMeteo"/>
+                    <DailyMeteo :dailyMeteo="dailyMeteo"/>
                 </div>
                 <div class="m-partie2">
-                    <HourlyMeteo/>
+                    <HourlyMeteo :hourlyMeteo="hourlyMeteo"/>
                 </div>
             </div>
         </div>
-        
     </section>
 </template>
+
 <script>
 import RequestedMeteo from './meteo-info-componants/RequestedMeteo.vue';
 import DailyMeteo from './meteo-info-componants/DailyMeteo.vue';
 import HourlyMeteo from './meteo-info-componants/HourlyMeteo.vue';
 
-
-export default{
-    data(){
-        return{
-            ville: 'Paris, France',
-            date : 'Jeudi 10 Fév,  15h15'
-        }
+export default {
+    props: {
+        currentMeteo: Object,
+        dailyMeteo: Object,
+        hourlyMeteo: Object
     },
-    components:{
+    data() {
+        return {
+            ville: 'Paris, France',
+            date: new Date().toLocaleString("fr-FR", {
+                weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
+            })
+        };
+    },
+    components: {
         RequestedMeteo,
         DailyMeteo,
         HourlyMeteo
     }
-}
+};
 </script>
 
 <style scoped>

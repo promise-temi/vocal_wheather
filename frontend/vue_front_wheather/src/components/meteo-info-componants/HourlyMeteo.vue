@@ -1,64 +1,58 @@
 <template>
-<section class="daily-meteo">
-    <p class="title"></p>
-    <div class="previsions">
-        <div class="prevision" v-for="(prevision, index) in previsions" :key="index">
-                <p class="jour">{{ prevision.date }}</p>
-                <img v-bind:src="prevision.logo" alt="">
-                <p class="temperatures">{{ prevision.temperatures }}</p>
+    <section class="hourly-meteo">
+        <p class="title">Prévisions horaires</p>
+        <div class="previsions">
+            <div class="prevision" v-for="(prevision, index) in limitedPrevisions" :key="index">
+                <p class="heure">{{ formatHour(prevision.date) }}</p>
+                <img v-bind:src="getWeatherIcon(prevision.weatherCode)" alt="icone météo">
+                <p class="temperatures">{{ prevision.temperature }}°</p>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
 </template>
+
 <script>
-export default{
-    data(){
-        return{
-            previsions : [
-                {
-                    date : 'Maint.',
-                    logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '13°'
+export default {
+    props: {
+        hourlyMeteo: Object // 🔥 Reçoit les prévisions horaires
+    },
+    computed: {
+        limitedPrevisions() {
+            if (!this.hourlyMeteo || !this.hourlyMeteo.temperature || this.hourlyMeteo.temperature.length === 0) {
+                return []; // 🔥 Retourne un tableau vide si aucune donnée
+            }
 
-                },
-                {
-                    date : '7h',
-                    logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '11°'
-
-                },
-                {
-                    date : '8h',
-                    logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '5°'
-
-                },
-                {
-                    date : '9h',
-                    logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '3°'
-
-                },
-                {
-                    date : '10h',
-                    logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '13°'
-
-                },
-                {
-                    date : '11h',
-                    logo : new URL('../../assets/images/Cloud_example.png', import.meta.url).href,
-                    temperatures : '13°'
-
-                },
-
-            ]
+            return this.hourlyMeteo.temperature.slice(0, 6).map((temp, index) => ({
+                date: this.hourlyMeteo.date[index] || "N/A",
+                temperature: temp.toFixed(1), // 🔥 Garde 1 décimale
+                weatherCode: this.hourlyMeteo.weather_code[index] || 3 // 🔥 Valeur par défaut : "Nuageux"
+            }));
+        }
+    },
+    methods: {
+        formatHour(dateString) {
+            return dateString ? new Date(dateString).getHours() + "h" : "--";
+        },
+        getWeatherIcon(weatherCode) {
+            const iconMap = {
+                0: new URL('../../assets/images/sun.png', import.meta.url).href,
+                1: new URL('../../assets/images/sun_cloud.png', import.meta.url).href,
+                2: new URL('../../assets/images/partly_cloudy.png', import.meta.url).href,
+                3: new URL('../../assets/images/cloud.png', import.meta.url).href,
+                51: new URL('../../assets/images/light_rain.png', import.meta.url).href,
+                53: new URL('../../assets/images/moderate_rain.png', import.meta.url).href,
+                61: new URL('../../assets/images/shower_rain.png', import.meta.url).href,
+                63: new URL('../../assets/images/heavy_rain.png', import.meta.url).href,
+                80: new URL('../../assets/images/thunderstorm.png', import.meta.url).href,
+                81: new URL('../../assets/images/heavy_thunderstorm.png', import.meta.url).href
+            };
+            return iconMap[weatherCode] || new URL('../../assets/images/default.png', import.meta.url).href;
         }
     }
-}
+};
 </script>
 <style scoped>
-section.daily-meteo{
+section.hourly-meteo{
     margin: 25px;
     margin-left: 0;
     margin-top: 0;
@@ -72,7 +66,7 @@ section.daily-meteo{
     
 }
 
-section.daily-meteo p.title {
+section.hourly-meteo p.title {
     margin-bottom: 0px;
 }
 
