@@ -13,7 +13,7 @@
                 <div class="progress-bar" role="progressbar" 
                     v-bind:style="{width: computedHumidity + '%'}" 
                     aria-valuemin="0" aria-valuemax="100">
-                    {{ computedHumidity }}%
+                    {{ computedHumidity[0]     }}%
                 </div>
             </div>
         </div>
@@ -70,13 +70,14 @@ export default {
                 2: new URL('../../assets/images/partly_cloudy.png', import.meta.url).href,
                 3: new URL('../../assets/images/cloud.png', import.meta.url).href,
                 51: new URL('../../assets/images/light_rain.png', import.meta.url).href,
-                53: new URL('../../assets/images/moderate_rain.png', import.meta.url).href,
-                61: new URL('../../assets/images/shower_rain.png', import.meta.url).href,
+                53: new URL('../../assets/images/light_rain.png', import.meta.url).href,
+                61: new URL('../../assets/images/heavy_rain.png', import.meta.url).href,
                 63: new URL('../../assets/images/heavy_rain.png', import.meta.url).href,
                 80: new URL('../../assets/images/thunderstorm.png', import.meta.url).href,
                 81: new URL('../../assets/images/heavy_thunderstorm.png', import.meta.url).href
             };
-            return iconMap[weatherCode] ?? new URL('../../assets/images/default.png', import.meta.url).href;
+            return iconMap[weatherCode] ?? new URL('../../assets/images/cloud_example.png', import.meta.url).href;
+           
         },
         getHumidityDescription(humidity) {
             if (humidity >= 80) return "Humidité élevée";
@@ -113,13 +114,14 @@ div.meteo{
 p.weather-code{
     font-size: 12px;
     position: relative;
+    white-space: nowrap;
     right: -10px;
 }
 
 div.meteo img{
     
     width: 150px;
-    height: 120px;
+    height: 100px;
 }
 
 div.humidity{
@@ -127,6 +129,7 @@ div.humidity{
     padding : 20px 0;
     border-left: none;
     border-right: none;
+    border-bottom: none;
 }
 
 div.humidity p{

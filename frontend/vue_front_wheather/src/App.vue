@@ -6,6 +6,7 @@
       :currentMeteo="currentMeteo" 
       :hourlyMeteo="hourlyMeteo" 
       :dailyMeteo="dailyMeteo" 
+      :ville="ville"
     />
 
   
@@ -28,6 +29,7 @@ export default {
       currentMeteo: null,
       hourlyMeteo: null,
       dailyMeteo: null,
+      ville: null,
       latitude: null,
       longitude: null,
     }
@@ -37,6 +39,7 @@ export default {
       this.currentMeteo = meteo.currentMeteo
       this.hourlyMeteo = meteo.hourlyMeteo
       this.dailyMeteo = meteo.dailyMeteo
+      this.ville = meteo.ville
     },
 
     getLocalisation() {
@@ -84,7 +87,6 @@ export default {
   }
 }
 </script>
-
 
 <style scoped>
 *{

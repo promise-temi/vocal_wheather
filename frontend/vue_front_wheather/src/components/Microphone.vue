@@ -59,7 +59,8 @@
         isRecording: false,
         currentMeteo: null,
         hourlyMeteo: null,
-        dailyMeteo: null
+        dailyMeteo: null,
+        ville: null
       };
     },
   
@@ -85,7 +86,7 @@
           this.recordMessage = "Écoute en cours...";
   
           const result = await recognizeFromMicrophone();
-          this.recordMessage = `Texte reconnu : ${result}`;
+          this.recordMessage = `Veuillez patienter`;
   
           // Envoyer le texte à Flask
           this.sendTextToFlask(result);
@@ -112,23 +113,25 @@
             this.currentMeteo = receivedData[0];
             this.hourlyMeteo = receivedData[1];
             this.dailyMeteo = receivedData[2];
+            this.ville = receivedData[3]
   
             // Émission de l'événement avec les données météo
             console.log("🚀 Émission de l'événement meteo-updated !");
             this.$emit("meteo-updated", {
               currentMeteo: this.currentMeteo,
               hourlyMeteo: this.hourlyMeteo,
-              dailyMeteo: this.dailyMeteo
+              dailyMeteo: this.dailyMeteo,
+              ville: this.ville,
             });
           } else {
             console.error("❌ Données météo incorrectes :", receivedData);
           }
   
-          this.recordMessage = `Flask : ${response.data.message}`;
+          this.recordMessage = `Effectuer une recherche vocale`;
   
         } catch (error) {
           console.error("❌ Erreur lors de l'envoi à Flask :", error);
-          this.recordMessage = "Erreur lors de l'envoi à Flask.";
+          this.recordMessage = "Une erreur s'est produite";
         }
       }
     }

@@ -22,17 +22,51 @@ export default {
                 return []; // 🔥 Retourne un tableau vide si aucune donnée
             }
 
-            return this.hourlyMeteo.temperature.slice(0, 6).map((temp, index) => ({
+            return this.hourlyMeteo.temperature.slice(2, 8).map((temp, index) => ({
                 date: this.hourlyMeteo.date[index] || "N/A",
-                temperature: temp.toFixed(1), // 🔥 Garde 1 décimale
+                temperature: Math.round(temp), // 🔥 Garde 1 décimale
                 weatherCode: this.hourlyMeteo.weather_code[index] || 3 // 🔥 Valeur par défaut : "Nuageux"
             }));
         }
     },
     methods: {
         formatHour(dateString) {
-            return dateString ? new Date(dateString).getHours() + "h" : "--";
-        },
+  if (!dateString) {
+    return "--";
+  }
+  // Récupère l'heure de la date
+  let hour = new Date(dateString).getHours();
+
+  // Décale de 2 heures
+  hour += 1;
+
+  // Gère le dépassement : si on passe 24, on revient à 0
+  if (hour >= 24) {
+    hour -= 24;
+  }
+
+  return hour + "h";
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         getWeatherIcon(weatherCode) {
             const iconMap = {
                 0: new URL('../../assets/images/sun.png', import.meta.url).href,
@@ -46,7 +80,7 @@ export default {
                 80: new URL('../../assets/images/thunderstorm.png', import.meta.url).href,
                 81: new URL('../../assets/images/heavy_thunderstorm.png', import.meta.url).href
             };
-            return iconMap[weatherCode] || new URL('../../assets/images/default.png', import.meta.url).href;
+            return iconMap[weatherCode] || new URL('../../assets/images/cloud_example.png', import.meta.url).href;
         }
     }
 };
@@ -58,16 +92,16 @@ section.hourly-meteo{
     margin-top: 0;
     background-image: linear-gradient(to bottom,#c9e5ffb9,#a5edffb5);
     width: 480px;
-    height: 175px;
+    height: 190px;
     padding: 25px;
     padding-bottom: 15px;
-    border-radius: 10px;
+    border-radius: 3px;
     font-size: 15px;
-    
+    margin-bottom: 50px;
 }
 
 section.hourly-meteo p.title {
-    margin-bottom: 0px;
+    margin-bottom:10px;
 }
 
 div.previsions{
@@ -80,7 +114,7 @@ div.previsions{
 div.prevision{
     display: flex;
     flex-direction: column;
-    
+    justify-content: space-between;
 }
 
 div.prevision p.jour{
@@ -89,9 +123,10 @@ div.prevision p.jour{
 
 
 div.prevision img{
-    width: 50px;
+    width: 40px;
+    height: 30px;
     position: relative;
-    left: -15px;
+    left: -10px;
 }
 
 div.prevision p.temperatures{
@@ -99,6 +134,10 @@ div.prevision p.temperatures{
     position: relative;
     left: -13px;
     margin-bottom: 0;
+}
+
+p.heure, p.temperatures{
+    font-weight: 600;
 }
 
 

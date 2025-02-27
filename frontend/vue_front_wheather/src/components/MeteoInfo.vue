@@ -15,6 +15,7 @@
                 </div>
                 <div class="m-partie2">
                     <HourlyMeteo :hourlyMeteo="hourlyMeteo"/>
+                    <HourlyMeteoGraph :hourlyMeteo="hourlyMeteo"/>
                 </div>
             </div>
         </div>
@@ -25,16 +26,17 @@
 import RequestedMeteo from './meteo-info-componants/RequestedMeteo.vue';
 import DailyMeteo from './meteo-info-componants/DailyMeteo.vue';
 import HourlyMeteo from './meteo-info-componants/HourlyMeteo.vue';
+import HourlyMeteoGraph from './meteo-info-componants/HourlyMeteoGraph.vue';
 
 export default {
     props: {
         currentMeteo: Object,
         dailyMeteo: Object,
-        hourlyMeteo: Object
+        hourlyMeteo: Object,
+        ville: String,
     },
     data() {
         return {
-            ville: 'Paris, France',
             date: new Date().toLocaleString("fr-FR", {
                 weekday: "long", day: "numeric", month: "short", hour: "2-digit", minute: "2-digit"
             })
@@ -43,19 +45,21 @@ export default {
     components: {
         RequestedMeteo,
         DailyMeteo,
-        HourlyMeteo
+        HourlyMeteo,
+        HourlyMeteoGraph,
     }
 };
 </script>
 
 <style scoped>
 section.section-meteo-info{
-    width: 850px;
+    width: 900px;
     height: 755px;
     background-color: #171717a3;
     margin: 50px;
     padding: 20px;
     margin-top: 20px;
+    
 }
 
 h2{
@@ -82,6 +86,7 @@ div.m-partie1{
 
 div.infos{
     display: flex;
+    justify-content: space-between;
 }
 </style>
 

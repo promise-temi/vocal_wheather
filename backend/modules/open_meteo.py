@@ -118,6 +118,7 @@ def get_weather(latitude, longitude):
 
     #prévision météo pour les jours suivant
     daily_dict = {
+        'date': daily_data['date'],
         'weather_code' :  daily_weather_code,
         'temperature_min' : daily_temperature_2m_min,
         'temperature_max' : daily_temperature_2m_max

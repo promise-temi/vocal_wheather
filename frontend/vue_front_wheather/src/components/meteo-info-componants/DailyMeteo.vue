@@ -24,14 +24,15 @@ export default {
 
             return this.dailyMeteo.temperature_max.slice(0, 5).map((tempMax, index) => ({
                 date: this.dailyMeteo.date?.[index] || "N/A",
-                tempMax: tempMax.toFixed(1), // 🔥 Garde 1 décimale
-                tempMin: this.dailyMeteo.temperature_min?.[index]?.toFixed(1) ?? "--",
+                tempMax:Math.round(   tempMax)  , // 🔥 Garde 1 décimale
+                tempMin:Math.round(       this.dailyMeteo.temperature_min?.[index]) ?? "--",
                 weatherCode: this.dailyMeteo.weather_code?.[index] || 3 // 🔥 Valeur par défaut : "Nuageux"
             }));
         }
     },
     methods: {
         formatDay(dateString) {
+            console.log("🔍 dateString reçu :", dateString);
             if (!dateString) return "--";
             const date = new Date(dateString);
             return date.toLocaleDateString("fr-FR", { weekday: "short" }); // 🔥 Affiche "Lun.", "Mar.", etc.
@@ -43,13 +44,13 @@ export default {
                 2: new URL('../../assets/images/partly_cloudy.png', import.meta.url).href,
                 3: new URL('../../assets/images/cloud.png', import.meta.url).href,
                 51: new URL('../../assets/images/light_rain.png', import.meta.url).href,
-                53: new URL('../../assets/images/moderate_rain.png', import.meta.url).href,
-                61: new URL('../../assets/images/shower_rain.png', import.meta.url).href,
+                53: new URL('../../assets/images/light_rain.png', import.meta.url).href,
+                61: new URL('../../assets/images/heavy_rain.png', import.meta.url).href,
                 63: new URL('../../assets/images/heavy_rain.png', import.meta.url).href,
                 80: new URL('../../assets/images/thunderstorm.png', import.meta.url).href,
                 81: new URL('../../assets/images/heavy_thunderstorm.png', import.meta.url).href
             };
-            return iconMap[weatherCode] || new URL('../../assets/images/default.png', import.meta.url).href;
+            return iconMap[weatherCode] || new URL('../../assets/images/cloud_example.png', import.meta.url).href;
         }
     }
 };
@@ -62,7 +63,7 @@ section.daily-meteo{
     width: 250px;
     padding: 25px;
     padding-bottom: 15px;
-    border-radius: 10px;
+    border-radius: 3px;
     font-size: 15px;
 }
 
@@ -86,7 +87,8 @@ div.prevision p.jour{
 }
 
 div.prevision img{
-    width: 50px;
+    width: 40px;
+    height:30px;
 }
 
 div.previsions div.prevision:last-child{
