@@ -73,10 +73,10 @@ export default {
       }
       try {
         let result = await axios.post('http://127.0.0.1:5000/localisation', data)
-        alert(result.data)
+        console.log(result.data)
       } catch (e) {
         console.error(e)
-        alert("une erreur s'est produite")
+        console.log("une erreur s'est produite")
       }
     }
   },

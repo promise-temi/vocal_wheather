@@ -121,7 +121,7 @@ p.weather-code{
 div.meteo img{
     
     width: 150px;
-    height: 100px;
+    height: 130px;
 }
 
 div.humidity{
