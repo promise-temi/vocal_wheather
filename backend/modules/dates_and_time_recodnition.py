@@ -15,6 +15,7 @@ def dates_and_time_recodnition(text):
     - Si seule une heure est trouvée, elle est associée à aujourd'hui.
     """
 
+    #Expression réguliere pour ne récupperer que les expressions temporelles dans le texte
     pattern = r"""
         \b(?:\d{1,2}[/-]\d{1,2}[/-]\d{2,4}|\d{4}-\d{2}-\d{2})\b |  # Formats classiques : 10/02/2024, 2024-05-10
         \b(?:\d{1,2}\s?h\s?(?:\d{2})?)\b |  # Heures : 10h, 14:30, 18h00, 19 h
@@ -27,7 +28,7 @@ def dates_and_time_recodnition(text):
     # Extraction des expressions temporelles avec regex
     matches = re.findall(pattern, text, re.IGNORECASE | re.VERBOSE)
 
-    # Nettoyage des résultats
+    # Nettoyage des résultats 
     extracted_dates = [match.strip() for match in matches if match.strip()]
 
     if not extracted_dates:
