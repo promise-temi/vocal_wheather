@@ -1,15 +1,20 @@
 <template>
+  <!-- Inclusion de la barre de navigation en haut de la page -->
+  <Header/>
 
-      <Header/>
-      <Microphone @meteo-updated="updateMeteoData" />
-    <MeteoInfo 
-      :currentMeteo="currentMeteo" 
-      :hourlyMeteo="hourlyMeteo" 
-      :dailyMeteo="dailyMeteo" 
-      :ville="ville"
-    />
+  <!-- Composant Microphone pour capturer la commande vocale.
+       L'événement "meteo-updated" est émis par le composant Microphone,
+       et déclenche la méthode "updateMeteoData" pour mettre à jour les données météo. -->
+  <Microphone @meteo-updated="updateMeteoData" />
 
-  
+  <!-- Composant MeteoInfo qui affiche les informations météo.
+       Les props sont liées aux données stockées dans le composant parent. -->
+  <MeteoInfo 
+    :currentMeteo="currentMeteo" 
+    :hourlyMeteo="hourlyMeteo" 
+    :dailyMeteo="dailyMeteo" 
+    :ville="ville"
+  />
 </template>
 
 <script>
@@ -26,15 +31,22 @@ export default {
   },
   data() {
     return {
+      // Données météo reçues de l'API backend ou via la commande vocale
       currentMeteo: null,
       hourlyMeteo: null,
       dailyMeteo: null,
+      // Nom de la ville détectée
       ville: null,
+      // Coordonnées de localisation de l'utilisateur
       latitude: null,
       longitude: null,
     }
   },
   methods: {
+    /**
+     * Met à jour les données météo à partir de l'événement émis par le composant Microphone.
+     * @param {Object} meteo - Objet contenant currentMeteo, hourlyMeteo, dailyMeteo et ville.
+     */
     updateMeteoData(meteo) {
       this.currentMeteo = meteo.currentMeteo
       this.hourlyMeteo = meteo.hourlyMeteo
@@ -42,6 +54,11 @@ export default {
       this.ville = meteo.ville
     },
 
+    /**
+     * Récupère la localisation de l'utilisateur via l'API de géolocalisation du navigateur.
+     * En cas de succès, les coordonnées (latitude et longitude) sont stockées dans le data
+     * et la méthode sendLocalisation() est appelée pour envoyer ces informations au backend.
+     */
     getLocalisation() {
       if ('geolocation' in navigator) {
         navigator.geolocation.getCurrentPosition(
@@ -53,7 +70,7 @@ export default {
             console.log('Latitude:', this.latitude)
             console.log('Longitude:', this.longitude)
 
-            // On peut envoyer la localisation ici
+            // Envoi des coordonnées au backend
             this.sendLocalisation()
           },
           (error) => {
@@ -65,8 +82,11 @@ export default {
       }
     },
 
+    /**
+     * Envoie la localisation (latitude et longitude) au serveur via une requête POST.
+     */
     async sendLocalisation() {
-      // Bien déclarer la variable data
+      // Construction de l'objet data avec les coordonnées
       const data = {
         longitude: this.longitude,
         latitude: this.latitude,
@@ -76,17 +96,21 @@ export default {
         console.log(result.data)
       } catch (e) {
         console.error(e)
-        console.log("une erreur s'est produite")
+        console.log("Une erreur s'est produite lors de l'envoi de la localisation.")
       }
     }
   },
 
+  /**
+   * Hook "mounted" : appelé lorsque le composant est monté dans le DOM.
+   * Ici, il déclenche la récupération de la localisation.
+   */
   mounted() {
-    // Juste getLocalisation ici
     this.getLocalisation()
   }
 }
 </script>
+
 
 <style scoped>
 *{

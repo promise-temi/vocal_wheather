@@ -1,107 +1,111 @@
-from modules.speech_recognition import recognize_from_microphone
-from modules.text_localisations import find_loc_in_text, geopy_lati_longi
-from modules.dates_and_time_recodnition import dates_and_time_recodnition
 from test_main import meteo_response
-from modules.open_meteo import get_weather
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import pandas as pd
+import numpy as np
 
 app = Flask(__name__)
 
-# 📌 Autoriser les requêtes CORS y compris celles avec credentials
+# Autoriser les requêtes CORS pour toutes les origines avec support des credentials.
 CORS(app, resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 
 class Session:
     def __init__(self, latitude="", longitude=""):
-        latitude = latitude
-        longitude = longitude
+        # Initialisation des coordonnées de session avec des valeurs par défaut
+        self.latitude = latitude
+        self.longitude = longitude
 
+# Objet global pour stocker les coordonnées de localisation actuelles
 session = Session()
 
 @app.route('/localisation', methods=['POST', 'OPTIONS'])
 def localisation():
+    """
+    Endpoint pour recevoir et stocker la localisation (latitude et longitude).
+    
+    Méthode POST:
+      Reçoit un JSON contenant les clés 'latitude' et 'longitude' et met à jour la session.
+    
+    Méthode OPTIONS:
+      Répond à la requête de préflight CORS.
+    """
     if request.method == "OPTIONS":
-        return jsonify({"message": "Préflight CORS réussi"}), 200  # Répondre correctement à l'OPTIONS
+        return jsonify({"message": "Préflight CORS réussi"}), 200
+
     try:
         data = request.get_json()
+        # Affichage des coordonnées reçues pour vérification
         print(data['longitude'])
         print(data['latitude'])
+        # Mise à jour de l'objet session avec les nouvelles coordonnées
         session.latitude = data['latitude']
         session.longitude = data['longitude']
-
         return jsonify({'message': 'bien recu'}), 200
-    except:
-        return jsonify({'message': 'Une erreur s\'est produite'}), 500
+    except Exception as e:
+        print(e)
+        return jsonify({'message': "Une erreur s'est produite"}), 500
 
 @app.route('/save-text', methods=['POST', 'OPTIONS'])
 def save_text():
+    """
+    Endpoint pour traiter le texte de commande vocale.
+    
+    Méthode POST:
+      - Reçoit un JSON avec la clé "text" contenant le texte reconnu.
+      - Extrait les informations (dates, ville) du texte et récupère les données météo associées.
+      - Nettoie et formate les résultats pour une réponse JSON.
+    
+    Méthode OPTIONS:
+      Répond à la requête de préflight CORS.
+    """
     if request.method == "OPTIONS":
-        return jsonify({"message": "Préflight CORS réussi"}), 200  # Répondre correctement à l'OPTIONS
+        return jsonify({"message": "Préflight CORS réussi"}), 200
 
     try:
         data = request.get_json()
         recognized_text = data.get("text")
         print(f"✅ Texte reçu : {recognized_text}")
-        meteo = meteo_response(recognized_text,  session.latitude, session.longitude)
-         # 🔥 Convertir chaque dictionnaire en DataFrame pour nettoyage
+
+        # Traitement du texte pour obtenir la réponse météo en utilisant les coordonnées de session
+        meteo = meteo_response(recognized_text, session.latitude, session.longitude)
+        
+        # Nettoyer chaque section des données météo en convertissant en DataFrame puis en dictionnaire JSON-compatible
         cleaned_meteo = []
         for section in meteo:
-            if isinstance(section, dict):  # Vérifier si c'est bien un dict avant conversion
+            if isinstance(section, dict):
                 df = pd.DataFrame.from_dict(section)
-                cleaned_section = clean_dataframe(df)  # Nettoyer
+                cleaned_section = clean_dataframe(df)
                 cleaned_meteo.append(cleaned_section)
             else:
-                cleaned_meteo.append(section)  # Si ce n'est pas un dict, ne pas modifier
+                cleaned_meteo.append(section)
+                
         return jsonify({"message": "Texte reçu avec succès", "received_text": cleaned_meteo}), 200
     except Exception as e:
         print(e)
         return jsonify({"message": "Erreur lors de la réception du texte", "error": str(e)}), 500
 
-
-
-# def main():
-
-#     #Réccupération du message grace a la commande vocal dans une variable
-#     message = recognize_from_microphone()
-#     print(message)
-
-#     #Dans le message reccupération des dates
-#     date_time = dates_and_time_recodnition(message)
-#     print(date_time)
-
-#     #Dans le message reccupération de la ville et uniquement la première trouvée
-#     try:
-#         ville = find_loc_in_text(message)[0]
-#         print(ville)
-#     except IndexError :
-#         print('Aucune ville trouvé, Veuillez recommance ou activer votre localisation')
-
-#     #réccupération de la latitude et longitude 
-#     latitude, longitude = geopy_lati_longi(ville)
-#     print(latitude)
-#     print(longitude)
-
-#     #réccupération des données météo
-#     current_dict, hourly_dict, daily_dict = get_weather(latitude, longitude)
-        
-import pandas as pd    
-import numpy as np
-
 def clean_dataframe(df):
-    """ Nettoie un DataFrame : remplace NaN, convertit les types, reformate les dates """
+    """
+    Nettoie un DataFrame en remplaçant les valeurs NaN par None et en convertissant les dates en chaînes de caractères.
+    
+    Paramètres:
+        df (pandas.DataFrame): Le DataFrame à nettoyer.
+    
+    Retour:
+        dict: Un dictionnaire JSON-compatible issu du DataFrame nettoyé.
+    """
     if df is None or df.empty:
-        return {}  # Retourne un dict vide si DataFrame est vide
+        return {}  # Retourne un dictionnaire vide si le DataFrame est vide
 
-    df = df.replace({np.nan: None})  # Remplace les NaN par None (JSON-friendly)
+    # Remplacer les valeurs NaN par None pour assurer la compatibilité JSON
+    df = df.replace({np.nan: None})
 
-    # Convertir les dates en string si elles existent
+    # Convertir la colonne 'date' en chaîne de caractères, si présente
     if "date" in df.columns:
         df["date"] = df["date"].astype(str)
 
-    return df.to_dict(orient="list")  # Convertit en dict JSON-compatible
-  
-
-
+    return df.to_dict(orient="list")
 
 if __name__ == "__main__":
+    # Démarre l'application Flask en mode debug sur toutes les interfaces réseau, port 5000.
     app.run(debug=True, host="0.0.0.0", port=5000)
