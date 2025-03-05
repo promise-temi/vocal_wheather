@@ -9,7 +9,6 @@
       :ville="ville"
     />
 
-  
 </template>
 
 <script>
